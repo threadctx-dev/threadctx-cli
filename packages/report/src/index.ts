@@ -80,6 +80,8 @@ export interface TextOptions {
   color: boolean;
   /** Include info-level findings. */
   verbose: boolean;
+  /** Suggested next commands as [command, why] pairs, printed under the summary. Interactive use only. */
+  next?: [string, string][];
 }
 
 function painter(color: boolean) {
@@ -120,6 +122,10 @@ export function renderText(result: ScanResult, opts: TextOptions): string {
   const tools = result.tools.filter((t) => t.layers > 0);
   if (tools.length) {
     out.push(p.dim(`Always-loaded context (estimated tokens): ${tools.map((t) => `${t.label.split(" (")[0]} ≈${t.alwaysTokenEstimate.toLocaleString("en-US")}`).join(" · ")}`));
+  }
+  if (opts.next?.length) {
+    const width = Math.max(...opts.next.map(([cmd]) => cmd.length));
+    out.push("", p.bold("Next"), ...opts.next.map(([cmd, why]) => `  ${p.cyan(cmd.padEnd(width))}  ${p.dim(why)}`));
   }
   for (const d of result.diagnostics) {
     const tag = d.level === "error" ? p.red("error") : d.level === "warning" ? p.yellow("note") : p.dim("note");

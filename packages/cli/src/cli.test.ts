@@ -155,3 +155,31 @@ describe("cli", () => {
     expect(err).not.toContain("audit --org");
   });
 });
+
+describe("next steps", () => {
+  async function interactive(files: Record<string, string>, env: Record<string, string> = {}, args: string[] = ["scan", "--no-color"]) {
+    const cwd = repo(files);
+    let out = "";
+    const io: Io = { cwd, env: { THREADCTX_HOME: join(cwd, ".home"), ...env }, stdout: (s) => (out += s), stderr: () => undefined, isTTY: true, now: () => new Date("2026-10-03T12:00:00Z") };
+    await main(args, io);
+    return out;
+  }
+  const DUP = "- Run `pnpm test` before every commit to make sure nothing is broken.\n- Use pnpm for all scripts in this repository.\n- Keep the changes small and focused on one thing.\n";
+  const FILES = { "package.json": JSON.stringify({ scripts: { test: "vitest" } }), "pnpm-lock.yaml": "", "AGENTS.md": `# A\n${DUP}`, "CLAUDE.md": `# C\n${DUP}\n- x‮y\n` };
+
+  it("an interactive scan names what is hidden and the commands worth running, with real counts", async () => {
+    const out = await interactive(FILES);
+    expect(out).toMatch(/Next\n\s+threadctx scan --verbose/);
+    expect(out).toMatch(/threadctx explain <file>\s+which files each agent loads/);
+    expect(out).toMatch(/threadctx fix --pr\s+1 safe fix in one pull request/);
+    expect(out).toMatch(/threadctx scan --verbose\s+\d+ hidden info findings?: /);
+  });
+
+  it("is silent in pipes, CI and when disabled, and never shown with --verbose's already-visible findings", async () => {
+    const nonTty = await cli(["scan"], repo(FILES));
+    expect(nonTty.out).not.toContain("Next");
+    expect(await interactive(FILES, { CI: "1" })).not.toContain("Next\n");
+    expect(await interactive(FILES, { THREADCTX_NO_HINTS: "1" })).not.toContain("Next\n");
+    expect(await interactive(FILES, {}, ["scan", "--verbose", "--no-color"])).not.toMatch(/threadctx scan --verbose/);
+  });
+});

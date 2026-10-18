@@ -121,7 +121,7 @@ export async function main(argv: string[], io: Io): Promise<number> {
       io.stderr(`threadctx: ${e.message}\n`);
       return 2;
     }
-    io.stderr(`threadctx: unexpected error: ${(e as Error).stack ?? e}\nPlease report this to hello@threadctx.dev\n`);
+    io.stderr(`threadctx: unexpected error: ${(e as Error).stack ?? e}\nPlease report it at https://github.com/threadctx-dev/threadctx-cli/issues\n`);
     return 2;
   }
 }
@@ -238,7 +238,7 @@ async function cmdScan(pathArg: string | undefined, v: Values, io: Io, color: bo
     format === "json" ? renderJson(result)
     : format === "sarif" ? renderSarif(result)
     : format === "md" ? renderMarkdown(result)
-    : renderText(result, { color: v.output ? false : color, verbose: Boolean(v.verbose) });
+    : renderText(result, { color: v.output ? false : color, verbose: Boolean(v.verbose), next: !v.output && !remoteLabel ? nextSteps(result, v, io) : undefined });
   if (v.output) {
     const dest = resolve(io.cwd, v.output);
     mkdirSync(dirname(dest), { recursive: true });
@@ -559,6 +559,24 @@ function cmdPackValidate(file: string, io: Io): number {
 // --- Upgrade line (spec §8.2): interactive only, once a day, never in CI ----------------
 
 /** Set when the paid capability exists (Phase 2). Until then no upgrade line is printed. */
+/** Commands worth running next, with this repository's real counts. Interactive terminals only, never in CI or pipes. */
+export function nextSteps(result: ScanResult, v: { verbose?: boolean }, io: Pick<Io, "isTTY" | "env">): [string, string][] | undefined {
+  if (!io.isTTY || io.env.CI || io.env.THREADCTX_NO_UPSELL || io.env.THREADCTX_NO_HINTS) return undefined;
+  const open = result.findings.filter((f) => !f.suppressed);
+  const out: [string, string][] = [];
+  const hidden = v.verbose ? [] : open.filter((f) => f.severity === "info");
+  if (hidden.length) {
+    const byRule = new Map<string, number>();
+    for (const f of hidden) byRule.set(f.ruleId, (byRule.get(f.ruleId) ?? 0) + 1);
+    const top = [...byRule].sort((a, b) => b[1] - a[1]).slice(0, 2).map(([id, n]) => `${RULES.find((r) => r.id === id)?.title ?? id}${n > 1 ? ` (${n})` : ""}`);
+    out.push(["threadctx scan --verbose", `${hidden.length} hidden info finding${hidden.length === 1 ? "" : "s"}: ${top.join("; ")}`]);
+  }
+  if (result.tools.some((t) => t.layers > 0)) out.push(["threadctx explain <file>", "which files each agent loads for that file, in order, with token estimates"]);
+  const fixable = open.filter((f) => f.fix?.kind === "safe").length;
+  if (fixable) out.push(["threadctx fix --pr", `${fixable} safe fix${fixable === 1 ? "" : "es"} in one pull request`]);
+  return out.length ? out : undefined;
+}
+
 export const UPGRADE_URL: string | undefined = "https://threadctx.dev/pricing";
 
 function maybeUpgradeLine(result: ScanResult, io: Io, remote?: string): void {
