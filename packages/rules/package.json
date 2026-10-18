@@ -1,0 +1,48 @@
+{
+  "name": "@threadctx/rules",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "!dist/**/*.test.*",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "@threadctx/core": "workspace:*",
+    "@threadctx/adapters": "workspace:*",
+    "@threadctx/discovery": "workspace:*",
+    "picomatch": "^4.0.7",
+    "yaml": "^2.9.1",
+    "ignore": "^7.0.12"
+  },
+  "description": "Rule engine and registry for agent context integrity (threadctx).",
+  "homepage": "https://threadctx.dev",
+  "keywords": [
+    "agents",
+    "ai",
+    "claude-code",
+    "cursor",
+    "copilot",
+    "gemini",
+    "agents-md",
+    "context",
+    "lint",
+    "mcp",
+    "sarif"
+  ],
+  "author": "threadctx",
+  "publishConfig": {
+    "access": "public"
+  }
+}

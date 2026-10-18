@@ -1,0 +1,6 @@
+{
+  "tool": "claude-code",
+  "scenario": "Session started at the repository root; tokens visible in context before any tool use.",
+  "expectedLoaded": ["ORACLE-IMPORT-1", "ORACLE-IMPORT-2", "ORACLE-IMPORT-3", "ORACLE-IMPORT-4", "ORACLE-LOCAL", "ORACLE-ROOT-CLAUDE", "ORACLE-RULE-ALWAYS"],
+  "expectedAbsent": ["ORACLE-AGENTS", "ORACLE-CODESPAN", "ORACLE-COMMENT-STRIPPED", "ORACLE-IMPORT-5", "ORACLE-RULE-SCOPED", "ORACLE-SUBDIR"]
+}

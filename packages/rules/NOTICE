@@ -1,0 +1,30 @@
+threadctx — Agent Context Integrity
+Copyright 2026 threadctx
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+apps/web (the threadctx cloud) is proprietary and excluded from that licence.
+
+Portions are derived from the following MIT-licensed projects by the same author.
+Each derived file names its origin repository and commit in a header comment.
+
+  curatedmcp-launcher  https://github.com/oneprofile-dev/mcp-launcher        MIT
+  mcp-auditor          https://github.com/oneprofile-dev/mcp-auditor         MIT
+  tokenshield          https://github.com/oneprofile-dev/tokenshield         MIT
+  threadctx-mcp        https://github.com/threadctx-dev/threadctx-mcp        MIT
+  archsteer            https://github.com/einvoice-dev1/archsteer            MIT
+
+MIT License text for derived portions:
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.

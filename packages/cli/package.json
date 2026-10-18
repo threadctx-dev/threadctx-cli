@@ -1,0 +1,53 @@
+{
+  "name": "threadctx",
+  "version": "0.4.0",
+  "mcpName": "io.github.threadctx-dev/threadctx",
+  "license": "Apache-2.0",
+  "type": "module",
+  "files": [
+    "dist/threadctx.mjs",
+    "README.md",
+    "LICENSE",
+    "NOTICE",
+    "THIRD_PARTY_LICENSES.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -b && node build.mjs",
+    "prepublishOnly": "node build.mjs"
+  },
+  "bin": {
+    "threadctx": "dist/threadctx.mjs",
+    "ctx": "dist/threadctx.mjs"
+  },
+  "description": "Your coding agents' instructions are stale and copied across tools. See what each agent is told, grade it, and fix it. Zero dependencies.",
+  "homepage": "https://threadctx.dev",
+  "keywords": [
+    "agents",
+    "ai",
+    "claude-code",
+    "cursor",
+    "copilot",
+    "gemini",
+    "agents-md",
+    "context",
+    "lint",
+    "mcp",
+    "sarif"
+  ],
+  "author": "threadctx",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@threadctx/core": "workspace:*",
+    "@threadctx/adapters": "workspace:*",
+    "@threadctx/discovery": "workspace:*",
+    "@threadctx/rules": "workspace:*",
+    "@threadctx/report": "workspace:*",
+    "diff": "^9.0.0"
+  }
+}

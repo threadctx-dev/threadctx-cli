@@ -1,0 +1,45 @@
+{
+  "name": "@threadctx/adapters",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "!dist/**/*.test.*",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "@threadctx/core": "workspace:*",
+    "picomatch": "^4.0.7",
+    "@threadctx/discovery": "workspace:*"
+  },
+  "description": "What Claude Code, Cursor, Copilot, Gemini CLI and AGENTS.md readers load: threadctx tool adapters.",
+  "homepage": "https://threadctx.dev",
+  "keywords": [
+    "agents",
+    "ai",
+    "claude-code",
+    "cursor",
+    "copilot",
+    "gemini",
+    "agents-md",
+    "context",
+    "lint",
+    "mcp",
+    "sarif"
+  ],
+  "author": "threadctx",
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,0 +1,6 @@
+version: 1
+suppress:
+  # The oracle fixture is a deliberately minimal copy of what Claude Code loads, not instructions for this repo.
+  - rule: CTX-S004
+    path: "fixtures/oracle/**"
+    reason: "recorded fixture for the Claude Code adapter test"

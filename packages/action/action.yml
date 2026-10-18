@@ -1,0 +1,76 @@
+name: "Agent context check"
+description: "Grade what your AI coding agents are told. Blocks new drift, duplication and injection risks in AGENTS.md, CLAUDE.md, Cursor, Copilot and Gemini context."
+author: "threadctx"
+branding:
+  icon: "check-circle"
+  color: "blue"
+
+inputs:
+  path:
+    description: "Directory to scan, relative to the workspace."
+    default: "."
+  fail-on:
+    description: "Fail when a NEW finding is at or above this level: blocker, warning, info or none. Findings that already exist on the base branch never fail the check."
+    default: "blocker"
+  comment:
+    description: "Post or update a pull request comment with the grade change. Needs pull-requests: write."
+    default: "true"
+  sarif:
+    description: "Upload findings to GitHub code scanning. Needs security-events: write and code scanning on the repository."
+    default: "true"
+  version:
+    description: "threadctx version to run. Pinned so a new release never changes your CI."
+    default: "0.4.0"
+
+outputs:
+  grade:
+    description: "Letter grade A to F."
+    value: ${{ steps.scan.outputs.grade }}
+  score:
+    description: "Score from 0 to 100."
+    value: ${{ steps.scan.outputs.score }}
+  new-findings:
+    description: "Findings introduced by this change (pull requests only)."
+    value: ${{ steps.scan.outputs.new_findings }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Scan agent context
+      id: scan
+      shell: bash
+      env:
+        TCTX_VERSION: ${{ inputs.version }}
+        TCTX_PATH: ${{ inputs.path }}
+        TCTX_FAIL_ON: ${{ inputs.fail-on }}
+        TCTX_EVENT_NAME: ${{ github.event_name }}
+      run: bash "${{ github.action_path }}/run.sh"
+
+    - name: Upload SARIF to code scanning
+      if: ${{ inputs.sarif == 'true' && steps.scan.outputs.sarif_file != '' }}
+      continue-on-error: true
+      uses: github/codeql-action/upload-sarif@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
+      with:
+        sarif_file: ${{ steps.scan.outputs.sarif_file }}
+        category: threadctx
+
+    - name: Comment on the pull request
+      if: ${{ inputs.comment == 'true' && github.event_name == 'pull_request' }}
+      continue-on-error: true
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        TCTX_REPO: ${{ github.repository }}
+        TCTX_PR: ${{ github.event.pull_request.number }}
+        TCTX_COMMENT_FILE: ${{ steps.scan.outputs.comment_file }}
+      run: bash "${{ github.action_path }}/comment.sh"
+
+    - name: Apply the result
+      shell: bash
+      env:
+        TCTX_EXIT: ${{ steps.scan.outputs.exit_code }}
+      run: |
+        if [ "${TCTX_EXIT:-0}" != "0" ]; then
+          echo "::error::threadctx found new agent context problems at or above the fail-on level. See the job summary."
+          exit 1
+        fi

@@ -1,0 +1,44 @@
+{
+  "name": "@threadctx/discovery",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "!dist/**/*.test.*",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "@threadctx/core": "workspace:*",
+    "ignore": "^7.0.12"
+  },
+  "description": "Repository and MCP config discovery for threadctx.",
+  "homepage": "https://threadctx.dev",
+  "keywords": [
+    "agents",
+    "ai",
+    "claude-code",
+    "cursor",
+    "copilot",
+    "gemini",
+    "agents-md",
+    "context",
+    "lint",
+    "mcp",
+    "sarif"
+  ],
+  "author": "threadctx",
+  "publishConfig": {
+    "access": "public"
+  }
+}

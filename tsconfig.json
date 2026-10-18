@@ -1,0 +1,23 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "packages/core"
+    },
+    {
+      "path": "packages/discovery"
+    },
+    {
+      "path": "packages/adapters"
+    },
+    {
+      "path": "packages/rules"
+    },
+    {
+      "path": "packages/report"
+    },
+    {
+      "path": "packages/cli"
+    }
+  ]
+}
