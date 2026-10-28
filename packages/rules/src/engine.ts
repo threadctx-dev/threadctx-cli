@@ -44,7 +44,7 @@ export interface ScanResult {
   findings: Finding[];
   diagnostics: Diagnostic[];
   artifacts: { path: string; tool: string; kind: string; tokenEstimate: number; contentHash: string; origin: string }[];
-  tools: { id: string; label: string; status: string; verified: string; alwaysTokenEstimate: number; layers: number }[];
+  tools: { id: string; label: string; status: string; verified: string; alwaysTokenEstimate: number; layers: number; /** Files loaded at session start for the repository root, in load order. */ alwaysLoaded: string[] }[];
   mcpServers: { client: string; name: string; source: string; transport: string }[];
   rules: RuleMeta[];
   /** Normalised facts this repository's instructions state (and what its lockfile says), for cross-repo comparison. */
@@ -201,7 +201,7 @@ export function scan(fs: FsView, opts: ScanOptions = {}): ScanResult {
     findings: unique,
     diagnostics,
     artifacts: artifacts.map((a) => ({ path: a.artifact.path, tool: a.artifact.tool, kind: a.artifact.kind, tokenEstimate: a.artifact.tokenEstimate, contentHash: a.artifact.contentHash, origin: a.artifact.origin })),
-    tools: ADAPTERS.map((a, i) => ({ id: a.id, label: a.label, status: a.status, verified: a.verifiedAgainst.date, alwaysTokenEstimate: state.rootContexts[i]!.alwaysTokenEstimate, layers: state.rootContexts[i]!.layers.length })),
+    tools: ADAPTERS.map((a, i) => ({ id: a.id, label: a.label, status: a.status, verified: a.verifiedAgainst.date, alwaysTokenEstimate: state.rootContexts[i]!.alwaysTokenEstimate, layers: state.rootContexts[i]!.layers.length, alwaysLoaded: [...new Set(state.rootContexts[i]!.layers.filter((l) => l.loading === "always").map((l) => l.path))] })),
     mcpServers: state.mcp.map((s) => ({ client: s.client, name: s.name, source: s.sourcePath, transport: s.transport })),
     rules: [...metas.values()].filter((m) => checks.some((c) => c.meta.id === m.id)),
     facts: statedFacts(ctx),

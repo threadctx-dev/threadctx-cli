@@ -42,6 +42,13 @@ describe("other formats", () => {
     expect(renderJson(again)).toBe(renderJson(scan(memoryRepo({ "AGENTS.md": "- `npm test`" }), { now: NOW })));
     expect(JSON.parse(renderJson(result)).schema).toBe("threadctx.scan/v1");
   });
+  it("text maps what each agent loads, even on a clean repository", () => {
+    const clean = scan(memoryRepo({ "AGENTS.md": "- Run `npm test`.", "CLAUDE.md": "@AGENTS.md\n" }), { now: NOW });
+    const text = renderText(clean, { color: false, verbose: false });
+    expect(text).toContain("What each agent loads at session start");
+    expect(text).toMatch(/Claude Code\s+CLAUDE\.md → AGENTS\.md/);
+    expect(text).toMatch(/Gemini CLI\s+nothing/);
+  });
   it("text shows grade, findings and fixable count without colour codes when disabled", () => {
     const text = renderText(result, { color: false, verbose: true });
     expect(text).toMatch(/Grade F/);

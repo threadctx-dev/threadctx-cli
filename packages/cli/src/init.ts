@@ -1,7 +1,7 @@
 // `threadctx init`: the GitHub Action workflow and the README badge, so a repository keeps its grade.
 
 /** Pinned by commit so a moved tag can never change what runs in CI. Updated by scripts/release.sh. */
-export const ACTION_PIN = { sha: "22e0830658b62f2ca8b8d41f7e4d9477d6942e62", tag: "v1.4.0" };
+export const ACTION_PIN = { sha: "0fcf8348d004ae084b5e557dddd381da25a6db6a", tag: "v1.4.1" };
 const CHECKOUT_PIN = { sha: "3d3c42e5aac5ba805825da76410c181273ba90b1", tag: "v7.0.1" };
 
 export const WORKFLOW_PATH = ".github/workflows/agent-context.yml";

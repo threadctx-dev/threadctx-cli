@@ -1,6 +1,6 @@
 {
   "name": "threadctx",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Check what your coding agents are told. Grades AGENTS.md, CLAUDE.md, Cursor, Copilot and Gemini context, finds dead paths, duplicated and conflicting instructions, hidden characters and secrets, and shows what each agent actually loads.",
   "author": { "name": "threadctx", "url": "https://www.npmjs.com/package/threadctx" },
   "homepage": "https://www.npmjs.com/package/threadctx",

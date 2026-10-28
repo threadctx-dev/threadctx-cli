@@ -1,6 +1,6 @@
 {
   "name": "threadctx",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "mcpName": "io.github.threadctx-dev/threadctx",
   "license": "Apache-2.0",
   "type": "module",
@@ -22,7 +22,7 @@
     "threadctx": "dist/threadctx.mjs",
     "ctx": "dist/threadctx.mjs"
   },
-  "description": "Your coding agents' instructions are stale and copied across tools. See what each agent is told, grade it, and fix it. Zero dependencies.",
+  "description": "See exactly what each coding agent is told. Maps which AGENTS.md, CLAUDE.md, Cursor, Copilot and Gemini files every agent loads, flags stale paths, duplication and unpinned MCP servers, and fixes the mechanical ones. Offline, zero dependencies.",
   "homepage": "https://threadctx.dev",
   "repository": {
     "type": "git",
@@ -43,7 +43,15 @@
     "context",
     "lint",
     "mcp",
-    "sarif"
+    "sarif",
+    "claude-md",
+    "cursor-rules",
+    "copilot-instructions",
+    "codex",
+    "linter",
+    "ai-agents",
+    "mcp-server",
+    "context-engineering"
   ],
   "author": "threadctx",
   "publishConfig": {

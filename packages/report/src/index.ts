@@ -91,6 +91,36 @@ function painter(color: boolean) {
 
 const GRADE_COLOR = { A: "green", B: "green", C: "yellow", D: "yellow", F: "red" } as const;
 
+const SHORT_LABEL: Record<string, string> = { "agents-md": "Codex / AGENTS.md" };
+
+/**
+ * What each agent is told when a session starts at the repository root: the files, in load order,
+ * and the estimated tokens. Shown on every scan, including clean ones, because it is the answer
+ * people come for even when there is nothing to fix.
+ */
+function renderAgentMap(result: ScanResult, p: ReturnType<typeof painter>): string[] {
+  const tools = result.tools;
+  if (!tools.some((t) => t.layers > 0)) return [];
+  const label = (t: ScanResult["tools"][number]) => SHORT_LABEL[t.id] ?? t.label.split(" (")[0]!;
+  const width = Math.max(...tools.map((t) => label(t).length));
+  const sharedExists = result.artifacts.some((a) => a.path === "AGENTS.md");
+  const lines = ["", p.bold("What each agent loads at session start")];
+  for (const t of tools) {
+    const files = t.alwaysLoaded ?? [];
+    const name = label(t).padEnd(width);
+    if (!files.length) {
+      lines.push(`  ${name}  ${p.dim("nothing: this agent starts with no repository instructions")}`);
+      continue;
+    }
+    const missesShared = sharedExists && t.id !== "agents-md" && !files.includes("AGENTS.md");
+    lines.push(
+      `  ${name}  ${files.join(" → ")}  ${p.dim(`≈${t.alwaysTokenEstimate.toLocaleString("en-US")} tokens`)}` +
+        (missesShared ? `  ${p.yellow("does not see AGENTS.md")}` : ""),
+    );
+  }
+  return lines;
+}
+
 export function renderText(result: ScanResult, opts: TextOptions): string {
   const p = painter(opts.color);
   const out: string[] = [];
@@ -119,10 +149,7 @@ export function renderText(result: ScanResult, opts: TextOptions): string {
   );
   const fixable = open.filter((f) => f.fix?.kind === "safe").length;
   if (fixable) out.push(p.dim(`${fixable} finding${fixable === 1 ? "" : "s"} can be fixed automatically: threadctx fix`));
-  const tools = result.tools.filter((t) => t.layers > 0);
-  if (tools.length) {
-    out.push(p.dim(`Always-loaded context (estimated tokens): ${tools.map((t) => `${t.label.split(" (")[0]} ≈${t.alwaysTokenEstimate.toLocaleString("en-US")}`).join(" · ")}`));
-  }
+  out.push(...renderAgentMap(result, p));
   if (opts.next?.length) {
     const width = Math.max(...opts.next.map(([cmd]) => cmd.length));
     out.push("", p.bold("Next"), ...opts.next.map(([cmd, why]) => `  ${p.cyan(cmd.padEnd(width))}  ${p.dim(why)}`));

@@ -72,8 +72,11 @@ function summarize(result: ScanResult): string {
   const lines = [`Grade ${result.grade} (${result.score}/100): ${result.counts.blocker} blockers, ${result.counts.warning} warnings, ${result.counts.info} info.`];
   for (const f of open.slice(0, 25)) lines.push(`- ${f.severity} ${f.ruleId} ${f.path || "."}${f.line ? `:${f.line}` : ""}: ${f.message}${f.fix?.kind === "safe" ? " (fixable: threadctx fix)" : ""}`);
   if (open.length > 25) lines.push(`…and ${open.length - 25} more.`);
-  const loaded = result.tools.filter((t) => t.layers > 0).map((t) => `${t.label.split(" (")[0]} ≈${t.alwaysTokenEstimate} tokens`);
-  if (loaded.length) lines.push(`Always-loaded context (estimates): ${loaded.join(", ")}.`);
+  const loaded = result.tools.filter((t) => t.layers > 0);
+  if (loaded.length) {
+    lines.push("Loaded at session start (estimates):");
+    for (const t of result.tools) lines.push(`- ${t.label.split(" (")[0]}: ${t.alwaysLoaded.length ? `${t.alwaysLoaded.join(" → ")} (≈${t.alwaysTokenEstimate} tokens)` : "nothing"}`);
+  }
   return lines.join("\n");
 }
 

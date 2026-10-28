@@ -7,7 +7,7 @@
       "name": "threadctx",
       "source": "./",
       "description": "Grade and fix agent context: AGENTS.md, CLAUDE.md, Cursor, Copilot, Gemini. Finds drift, duplication, conflicts, hidden characters and secrets.",
-      "version": "0.4.1",
+      "version": "0.5.0",
       "author": { "name": "threadctx", "url": "https://www.npmjs.com/package/threadctx" },
       "homepage": "https://www.npmjs.com/package/threadctx",
       "repository": "https://github.com/threadctx-dev/claude-plugin",

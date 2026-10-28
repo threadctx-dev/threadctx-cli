@@ -3,7 +3,7 @@
 # Inputs arrive as environment variables, never interpolated into this script.
 set -uo pipefail
 
-: "${TCTX_VERSION:=0.4.1}" "${TCTX_PATH:=.}" "${TCTX_FAIL_ON:=blocker}" "${TCTX_EVENT_NAME:=push}"
+: "${TCTX_VERSION:=0.5.0}" "${TCTX_PATH:=.}" "${TCTX_FAIL_ON:=blocker}" "${TCTX_EVENT_NAME:=push}"
 OUT="${RUNNER_TEMP:-/tmp}/threadctx"
 GITHUB_OUTPUT="${GITHUB_OUTPUT:-/dev/null}"
 GITHUB_STEP_SUMMARY="${GITHUB_STEP_SUMMARY:-/dev/null}"
